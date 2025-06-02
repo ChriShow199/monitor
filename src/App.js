@@ -1,6 +1,10 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import Table from './Tabla';
+import BotonCPU from './btnCPU';
+import BotonMemoria from './btnMemoria';
+import BotonDisco from './btnDisco';
+import BotonGPU from './btnGPU';
 
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null });
@@ -30,6 +34,10 @@ useEffect(() => {
       <header className="App-header">
         <h3>Administrador de Tareas:</h3>
         <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
+        <BotonCPU/>
+        <BotonMemoria/>
+        <BotonDisco/>
+        <BotonGPU/>
       </header>
     </div>
   );

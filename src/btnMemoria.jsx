@@ -1,13 +1,13 @@
 import './App.css';
 
-export default function BotonCPU() {
+export default function BotonMemoria() {
     const handleClick = () => {
     alert("Mensaje");
     };
 
     return (
     <button onClick={handleClick}>
-        CPU
+        Memoria
     </button>
     );
 }
