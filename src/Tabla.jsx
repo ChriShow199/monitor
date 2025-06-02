@@ -23,7 +23,7 @@ export default function Table({ cpu, memoria, disco, gpu }) {
   // Si tienes sólo un dato, lo ponemos en una fila
   const data = [
     {
-      rendimiento1: `${cpu}%`, // muestra el valor pasado o 0
+      rendimiento1: `${cpu}%`,
       rendimiento2: `${memoria}%`,
       rendimiento3: `${gpu}%`,
       rendimiento4: `${disco}%`
