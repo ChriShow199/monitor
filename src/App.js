@@ -6,10 +6,11 @@ import BotonCPU from './btnCPU';
 import BotonMemoria from './btnMemoria';
 import BotonDisco from './btnDisco';
 import BotonGPU from './btnGPU';
+import Grafico from './grafico';
 
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null });
-
+  
 useEffect(() => {
     const fetchData = () => {
       fetch("http://localhost:8080/rendimientos/test.php")
@@ -23,10 +24,10 @@ useEffect(() => {
         .catch(err => console.error("Error:", err));
     };
 
-    fetchData(); // Llamada inicial
-    const interval = setInterval(fetchData, 1000); // Cada 1 segundos
+    fetchData(); 
+    const interval = setInterval(fetchData, 1000); // Cada 1 segundo
 
-    return () => clearInterval(interval); // Limpiar intervalo al desmontar
+    return () => clearInterval(interval); 
   }, []);
   
   
@@ -39,7 +40,9 @@ useEffect(() => {
         <BotonMemoria/>
         <BotonDisco/>
         <BotonGPU/>
+        <Grafico />
       </header>
+      
     </div>
   );
 }
