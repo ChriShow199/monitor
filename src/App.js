@@ -8,8 +8,11 @@ import BotonDisco from './btnDisco';
 import BotonGPU from './btnGPU';
 import Grafico from './grafico';
 
+
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null });
+  const [GraficoCPU, setGraficoCPU] = useState(false);
+  const [GraficoDisco, setGraficoDisco] = useState(false);
   
 useEffect(() => {
     const fetchData = () => {
@@ -36,13 +39,13 @@ useEffect(() => {
       <header className="App-header">
         <h3>Administrador de Tareas:</h3>
         <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
-        <BotonCPU/>
+        <BotonCPU onClick={() => setGraficoCPU(prev => !prev)} />
         <BotonMemoria/>
-        <BotonDisco/>
+        <BotonDisco onClick={() => setGraficoDisco(prev => !prev)}/>
         <BotonGPU/>
-        <Grafico />
+        {GraficoCPU && <Grafico cpu={dato.uso_cpu} />}
+        {GraficoDisco && <Grafico disco={dato.uso_disco} />}
       </header>
-      
     </div>
   );
 }

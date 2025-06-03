@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import "./styles.css";
 
 import {
@@ -9,58 +9,33 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    CPU: 2400
-  },
-  {
-    CPU: 1398
-  },
-  {
-    CPU: 9800
-  },
-  {
-    name: "Rendimiento",
-    CPU: 3908
-  },
-  {
-    CPU: 4800
-  },
-  {
-    CPU: 3800
-  },
-  {
-    CPU: 4300
-  },
-];
+export default function Grafico({ cpu, disco }) {
+  const [data, setData] = useState([]);
 
-export default function Grafico() {
+  useEffect(() => {
+    const tiempo = new Date().toLocaleTimeString();
+    setData(prevData => {
+      const actualizar = [...prevData, { name: tiempo, CPU: cpu, Disco: disco }];
+      return actualizar.slice(-5);
+    });
+  }, [cpu, disco]);
+
   return (
     <LineChart
       width={1500}
       height={440}
       data={data}
-      margin={{
-        top: 1,
-        right: 1,
-        left: 500,
-        bottom: 1,
-      }}
+      margin={{ top: 1, right: 1, left: 500, bottom: 1 }}
     >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" padding={{ left: 20, right: 20 }} />
-      <YAxis />
+      <CartesianGrid strokeDasharray="5 5" />
+      <XAxis dataKey="name" />
+      <YAxis domain={[0, 100]} />
       <Tooltip />
       <Legend />
-      <Line
-        type="monotone"
-        dataKey="CPU"
-        stroke="#FF0000"
-        activeDot={{ r: 8 }}
-      />
+      <Line type="monotone" dataKey="CPU" stroke="#FF0000" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="Disco" stroke="#00FF00" activeDot={{ r: 8 }} />
     </LineChart>
   );
 }

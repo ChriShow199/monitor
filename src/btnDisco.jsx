@@ -1,14 +1,10 @@
 import React from 'react';
-import './App.css';
+import "./styles.css";
 
-export default function BotonDisco() {
-    const handleClick = () => {
-    alert("Mensaje");
-    };
-
-    return (
-    <button onClick={handleClick}>
-        Disco
+export default function BotonDisco({ onClick }) {
+  return (
+    <button onClick={onClick}>
+      Disco
     </button>
-    );
+  );
 }
