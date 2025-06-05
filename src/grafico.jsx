@@ -11,16 +11,16 @@ import {
   Legend,
 } from "recharts";
 
-export default function Grafico({ cpu, disco }) {
+export default function Grafico({ cpu, disco, memoria, gpu }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const tiempo = new Date().toLocaleTimeString();
     setData(prevData => {
-      const actualizar = [...prevData, { name: tiempo, CPU: cpu, Disco: disco }];
+      const actualizar = [...prevData, { name: tiempo, CPU: cpu, Disco: disco, Memoria: memoria, GPU: gpu }];
       return actualizar.slice(-5);
     });
-  }, [cpu, disco]);
+  }, [cpu, disco, memoria, gpu]);
 
   return (
     <LineChart
@@ -36,6 +36,8 @@ export default function Grafico({ cpu, disco }) {
       <Legend />
       <Line type="monotone" dataKey="CPU" stroke="#FF0000" activeDot={{ r: 8 }} />
       <Line type="monotone" dataKey="Disco" stroke="#00FF00" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="Memoria" stroke="#92C5FC" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="GPU" stroke="#FFDE21" activeDot={{ r: 8 }} />
     </LineChart>
   );
 }

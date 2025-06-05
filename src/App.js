@@ -13,6 +13,8 @@ function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null });
   const [GraficoCPU, setGraficoCPU] = useState(false);
   const [GraficoDisco, setGraficoDisco] = useState(false);
+  const [GraficoMemoria, setGraficoMemoria] = useState(false);
+  const [GraficoGPU, setGraficoGPU] = useState(false);
   
 useEffect(() => {
     const fetchData = () => {
@@ -40,11 +42,13 @@ useEffect(() => {
         <h3>Administrador de Tareas:</h3>
         <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
         <BotonCPU onClick={() => setGraficoCPU(prev => !prev)} />
-        <BotonMemoria/>
+        <BotonMemoria onClick={() => setGraficoMemoria(prev => !prev)}/>
         <BotonDisco onClick={() => setGraficoDisco(prev => !prev)}/>
-        <BotonGPU/>
+        <BotonGPU onClick={() => setGraficoGPU(prev => !prev)}/>
         {GraficoCPU && <Grafico cpu={dato.uso_cpu} />}
         {GraficoDisco && <Grafico disco={dato.uso_disco} />}
+        {GraficoMemoria && <Grafico memoria={dato.uso_memoria} />}
+        {GraficoGPU && <Grafico gpu={dato.uso_gpu} />}
       </header>
     </div>
   );

@@ -1,14 +1,10 @@
 import React from 'react';
-import './App.css';
+import "./styles.css";
 
-export default function BotonGPU() {
-    const handleClick = () => {
-    alert("Mensaje");
-    };
-
-    return (
-    <button onClick={handleClick}>
-        GPU
+export default function BotonCPU({ onClick }) {
+  return (
+    <button onClick={onClick}>
+      GPU
     </button>
-    );
+  );
 }
