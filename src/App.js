@@ -17,17 +17,18 @@ function App() {
   const [GraficoGPU, setGraficoGPU] = useState(false);
   
 useEffect(() => {
-    const fetchData = () => {
-      fetch("http://localhost:8080/rendimientos/test.php")
-        .then(response => {
-          if (!response.ok) throw new Error("Error");
-          return response.json();
-        })
-        .then(data => {
-          setDato({uso_cpu: data.uso_cpu, uso_memoria: data.uso_memoria, uso_disco: data.uso_disco, uso_gpu: data.uso_gpu});
-        })
-        .catch(err => console.error("Error:", err));
-    };
+    const fetchData = async () => {
+    const [cpuRes, memoriaRes, discoRes, gpuRes] = await Promise.all([
+      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=cpu"),
+      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=memoria"),
+      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=disco"),
+      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=gpu"),
+    ]);
+
+    const [cpu, memoria, disco, gpu] = await Promise.all([cpuRes.json(), memoriaRes.json(), discoRes.json(), gpuRes.json(),]);
+
+    setDato({uso_cpu: cpu.uso_cpu, uso_memoria: memoria.uso_memoria, uso_disco: disco.uso_disco, uso_gpu: gpu.uso_gpu});
+  };
 
     fetchData(); 
     const interval = setInterval(fetchData, 1000); // Cada 1 segundo
