@@ -1,7 +1,7 @@
 import React from 'react';
 import "./styles.css";
 
-export default function BotonCPU({ onClick }) {
+export default function BotonGPU({ onClick }) {
   return (
     <button onClick={onClick}>
       GPU

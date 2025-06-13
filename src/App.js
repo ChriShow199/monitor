@@ -7,33 +7,35 @@ import BotonMemoria from './btnMemoria';
 import BotonDisco from './btnDisco';
 import BotonGPU from './btnGPU';
 import Grafico from './grafico';
+import Horas1 from './cmbxHora1';
+import Horas2 from './cmbxHora2';
+import Dias from './cmbxDia';
+import BotonGraficar from './graficar';
 
 
 function App() {
-  const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null });
+  const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null, });
   const [GraficoCPU, setGraficoCPU] = useState(false);
   const [GraficoDisco, setGraficoDisco] = useState(false);
   const [GraficoMemoria, setGraficoMemoria] = useState(false);
   const [GraficoGPU, setGraficoGPU] = useState(false);
+
+
   
 useEffect(() => {
     const fetchData = async () => {
-    const [cpuRes, memoriaRes, discoRes, gpuRes] = await Promise.all([
-      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=cpu"),
-      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=memoria"),
-      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=disco"),
-      fetch("http://localhost:8080/rendimientos/insertar_ejecucion.php?servicio=gpu"),
-    ]);
+    const res = await fetch("http://localhost:8080/rendimientos/envio_datos.php");
+    const datos = await res.json();
 
-    const [cpu, memoria, disco, gpu] = await Promise.all([cpuRes.json(), memoriaRes.json(), discoRes.json(), gpuRes.json(),]);
-
-    setDato({uso_cpu: cpu.uso_cpu, uso_memoria: memoria.uso_memoria, uso_disco: disco.uso_disco, uso_gpu: gpu.uso_gpu});
+    setDato({uso_cpu: datos.uso_cpu, uso_memoria: datos.uso_memoria, uso_disco: datos.uso_disco, uso_gpu: datos.uso_gpu,});
   };
 
     fetchData(); 
-    const interval = setInterval(fetchData, 1000); // Cada 1 segundo
+    const interval = setInterval(fetchData, 1000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
+    
+    
   }, []);
   
   
@@ -46,6 +48,10 @@ useEffect(() => {
         <BotonMemoria onClick={() => setGraficoMemoria(prev => !prev)}/>
         <BotonDisco onClick={() => setGraficoDisco(prev => !prev)}/>
         <BotonGPU onClick={() => setGraficoGPU(prev => !prev)}/>
+        <Horas1 />
+        <Horas2 />
+        <Dias/>
+        <BotonGraficar/>
         {GraficoCPU && <Grafico cpu={dato.uso_cpu} />}
         {GraficoDisco && <Grafico disco={dato.uso_disco} />}
         {GraficoMemoria && <Grafico memoria={dato.uso_memoria} />}

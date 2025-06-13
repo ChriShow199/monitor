@@ -2,3 +2,41 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+.EstiloBotones {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: flex-start;
+  width: 50%;
+  margin: 0;
+}
+
+.contenedor-flex {
+  display: flex;
+  padding: 10px;
+}
+
+.flex-izquierda {
+  display: flex !important;
+  justify-content: flex-start !important;
+  padding: 10px;
+  background-color: #f0f0f0;
+  width: 100%;
+  border: 1px solid #ccc; /* para visualizar el área */
+}
+
+.flex-centro {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+.flex-derecha {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+

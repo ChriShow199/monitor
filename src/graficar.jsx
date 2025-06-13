@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function BotonCPU({ onClick }) {
+export default function BotonGraficar({ onClick }) {
 
   return (
   <header>
     <button onClick={onClick}>
-      CPU
+      Graficar
     </button>
   </header>
   );

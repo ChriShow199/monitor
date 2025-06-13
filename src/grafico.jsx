@@ -15,21 +15,27 @@ export default function Grafico({ cpu, disco, memoria, gpu }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const tiempo = new Date().toLocaleTimeString();
-    setData(prevData => {
-      const actualizar = [...prevData, { name: tiempo, CPU: cpu, Disco: disco, Memoria: memoria, GPU: gpu }];
-      return actualizar.slice(-5);
-    });
+    const intervalo = setInterval(() => {
+      const tiempo = new Date().toLocaleTimeString();
+
+      setData((prevData) => {
+        const actualizar = [...prevData, { name: tiempo, CPU: cpu, Disco: disco, Memoria: memoria, GPU: gpu },
+        ];
+        return actualizar.slice(-5);
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalo);
   }, [cpu, disco, memoria, gpu]);
 
   return (
     <LineChart
       width={1500}
-      height={440}
+      height={333}
       data={data}
       margin={{ top: 1, right: 1, left: 500, bottom: 1 }}
     >
-      <CartesianGrid strokeDasharray="5 5" />
+      <CartesianGrid strokeDasharray="0" />
       <XAxis dataKey="name" />
       <YAxis domain={[0, 100]} />
       <Tooltip />
