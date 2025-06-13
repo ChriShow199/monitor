@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function BotonGraficar({ onClick }) {
+export default function BotonGraficar({onClick}) {
 
   return (
   <header>
