@@ -1,13 +1,34 @@
 .App {
   text-align: center;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
+  display:flex;
   flex-direction: column;
-  align-items: center;
+  align-items:self-start;
+  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+
+.contenedor-principal {
+  display: flex;
+  flex-direction: row; /* fila horizontal */
+  align-items: flex-start; /* alineamos al inicio verticalmente */
+  gap: 20px; /* espacio entre columnas */
+  padding: 20px;
+}
+
+.panel-controles {
+  /* Para que el panel tenga un ancho fijo o relativo */
+  width: 300px;
+}
+
+.panel-grafica {
+  /* Para que la gráfica tome el resto del espacio */
+  flex-grow: 1;
 }

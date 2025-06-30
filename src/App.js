@@ -9,31 +9,65 @@ import BotonGPU from './btnGPU';
 import Grafico from './grafico';
 import Horas1 from './cmbxHora1';
 import Horas2 from './cmbxHora2';
-import Dias from './cmbxDia';
-import BotonGraficar from './graficar';
+import BotonGraficar from './btnGraficar';
+import BotonSwitch from './btnApagar_Prender';
+import GraficoHistorial from './graficoHistorial';
 
 
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null, });
   const [graficoVisible, setGraficoVisible] = useState(null);
-  
-useEffect(() => {
-    const fetchData = async () => {
-    const res = await fetch("http://localhost:8080/rendimientos/envio_datos.php");
-    const datos = await res.json();
+  const [switchEncendido, setSwitchEncendido] = useState(true); // Inicia encendido
+  const [inicio, setInicio] = useState('');
+  const [fin, setFin] = useState('');
+  const [datosCPU, setDatosCPU] = useState([]);
+  const [mostrarGraficoCPU, setMostrarGraficoCPU] = useState(false);
 
-    setDato({uso_cpu: datos.uso_cpu, uso_memoria: datos.uso_memoria, uso_disco: datos.uso_disco, uso_gpu: datos.uso_gpu});
+  useEffect(() => {
+    let isFetching = false;
+    const fetchData = async () => {
+      if (isFetching) return; // evita llamada si ya hay una en curso
+      isFetching = true;
+      try 
+      {
+        const url = switchEncendido ? "http://localhost:8080/rendimientos/envio_datos.php?insertar=1" : "http://localhost:8080/rendimientos/envio_datos.php";
+        const res = await fetch(url);
+        const datos = await res.json();
+        setDato({uso_cpu: datos.uso_cpu, uso_memoria: datos.uso_memoria, uso_disco: datos.uso_disco, uso_gpu: datos.uso_gpu,});
+      } 
+      catch (error) 
+      {
+        console.error("Error al obtener datos:", error);
+      } 
+      finally 
+      {
+        isFetching = false;
+      }
+  };
+      fetchData();
+      const interval = setInterval(fetchData, 1000);
+      return () => clearInterval(interval);
+}, [switchEncendido]);
+
+  const toggleSwitch = () => setSwitchEncendido(!switchEncendido);
+
+
+    const graficarCPU = async () => {
+    if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
+    try {
+      const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
+      const data = await res.json();
+      const formateado = data.map(d => ({
+        name: d.fecha_hora,
+        CPU: d.uso_cpu
+      }));
+      setDatosCPU(formateado);
+      setMostrarGraficoCPU(true);
+    } catch (err) {
+      console.error("Error al graficar CPU:", err);
+    }
   };
 
-    fetchData(); 
-    const interval = setInterval(fetchData, 1000);
-
-    return () => clearInterval(interval);
-    
-    
-  }, []);
-  
-  
   return (
     <div className="App">
       <header className="App-header">
@@ -43,13 +77,16 @@ useEffect(() => {
         <BotonMemoria onClick={() => setGraficoVisible("Memoria")} />
         <BotonDisco onClick={() => setGraficoVisible("Disco")} />
         <BotonGPU onClick={() => setGraficoVisible("GPU")} />
-        <Horas1 />
-        <Horas2 />
-        <Dias/>
+        <Horas1 activo={switchEncendido} onCambio={setInicio} />
+        <Horas2 activo={switchEncendido} onCambio={setFin} />
+        <BotonGraficar onClick={graficarCPU} />
+        <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
+       
         {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
         {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
         {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
         {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
+        {mostrarGraficoCPU && <GraficoHistorial datos={datosCPU} />}
       </header>
     </div>
   );

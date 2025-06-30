@@ -1,0 +1,23 @@
+button {
+  background-color: #4781ffb7;     /* Azul React */
+  border:0ric;
+  border-radius: 8px;
+  color: #ffffff;               /* Color texto oscuro */
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(97, 218, 251, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #21a1f1;
+  box-shadow: 0 6px 10px rgba(33, 161, 241, 0.6);
+}
+
+button:active {
+  background-color: #1786c6;
+  box-shadow: 0 2px 4px rgba(23, 134, 198, 0.8);
+  transform: translateY(2px);
+}
