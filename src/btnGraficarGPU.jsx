@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function BotonGraficar({onClick}) {
+export default function BotonGraficarGPU({onClick}) {
 
   return (
   <header>
     <button onClick={onClick}>
-      Graficar
+      Graficar GPU
     </button>
   </header>
   );
