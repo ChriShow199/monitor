@@ -21,7 +21,7 @@ import Ventana from './modal';
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null, });
   const [graficoVisible, setGraficoVisible] = useState(null);
-  const [switchEncendido, setSwitchEncendido] = useState(true); // Inicia encendido
+  const [switchEncendido, setSwitchEncendido] = useState(false); // Inicia encendido
   const [inicio, setInicio] = useState('');
   const [fin, setFin] = useState('');
   const [graficoRendimiento, setGraficoRendimiento] = useState(null); // 'CPU' o 'Memoria'

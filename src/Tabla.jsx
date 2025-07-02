@@ -21,7 +21,7 @@ export default function Table({ cpu, memoria, disco, gpu }) {
     },
   ];
 
-  // Si tienes sólo un dato, lo ponemos en una fila
+  // Si se tiene sólo un dato, lo ponemos en una fila
   const data = [
     {
       rendimiento1: `${cpu}%`,

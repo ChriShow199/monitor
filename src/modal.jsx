@@ -6,6 +6,7 @@ Modal.setAppElement('#root');
 function Ventana() {
   const [modalLoginOpen, setModalLoginOpen] = useState(false);
   const [modalRegistroOpen, setModalRegistroOpen] = useState(false);
+  const [rolRegistro, setRolRegistro] = useState('');
 
   //Login
   const [correoLogin, setCorreoLogin] = useState('');
@@ -145,6 +146,7 @@ function Ventana() {
         </button>
       </Modal>
 
+
       {/* Modal Registro */}
       <Modal
         isOpen={modalRegistroOpen}
@@ -153,13 +155,14 @@ function Ventana() {
         style={{
           content: {
             top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: '300px', padding: '20px', borderRadius: '10px',
+            width: '400px', padding: '20px', borderRadius: '10px',
           },
 
           overlay: {backgroundColor: '#282c34'},
         }}
       >
         <h2>Registro</h2>
+        
         <input
           type="email"
           placeholder="Correo"
@@ -167,6 +170,7 @@ function Ventana() {
           onChange={(e) => setCorreoRegistro(e.target.value)}
           style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
         />
+
         <input
           type="password"
           placeholder="Contraseña"
@@ -174,6 +178,7 @@ function Ventana() {
           onChange={(e) => setPassRegistro(e.target.value)}
           style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
         />
+
         <input
           type="password"
           placeholder="Confirmar Contraseña"
@@ -181,14 +186,25 @@ function Ventana() {
           onChange={(e) => setConfirmPass(e.target.value)}
           style={{ width: '100%', marginBottom: '15px', padding: '8px' }}
         />
-        <button onClick={Registro} style={{ marginRight: '10px' }}>
-          Registrarse
-        </button>
+
+        <select
+          value={rolRegistro}
+          onChange={(e) => setRolRegistro(e.target.value)}
+          style={{ width: '100%', marginBottom: '15px', padding: '8px' }}
+        >
+          <option value="">Selecciona un rol</option>
+          <option value="admin">Administrador</option>
+          <option value="usuario">Usuario</option>
+          <option value="invitado">Invitado</option>
+        </select>
+
+        <button onClick={Registro} style={{ marginRight: '10px' }}>Registrarse</button>
+
         <button onClick={() => {
-          setModalRegistroOpen(false);
-          setModalLoginOpen(true);
-        }}>
-          Ya tengo cuenta
+            setModalRegistroOpen(false);
+            setModalLoginOpen(true);
+          }}>
+            Ya tengo cuenta
         </button>
       </Modal>
     </div>
