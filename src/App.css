@@ -1,34 +1,58 @@
 .App {
-  text-align: center;
+  text-align:center;
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display:flex;
-  flex-direction: column;
-  align-items:self-start;
-  justify-content: center;
+  min-height: 100vh;           /* ocupa toda la altura de la ventana */
+  display: flex;
+  flex-direction: column;      /* apila los hijos verticalmente */
+  align-items: flex-start;     /* los alinea a la izquierda */
+  justify-content: center;     /* centra todo verticalmente */
   font-size: calc(10px + 2vmin);
+  color: white;
+  padding-left: 20px;          /* opcional: espacio desde el borde izquierdo */
+}
+
+
+.botones-rendimiento {
+  height: 32vh; 
+  display: flex;
+  flex-direction: column;     /* botones en columna */
+  justify-content: center;    /* centra verticalmente */
+  align-items: center;    /* alinea a la izquierda (usa center si los quieres centrados) */
+  padding-left: 130px;         /* opcional, separa del borde izquierdo */
+  gap: 5px; 
+}
+
+.botones-historial {
+  height: 38vh; 
+  display: flex;
+  flex-direction: column;     /* botones en columna */
+  justify-content: center;    /* centra verticalmente */
+  align-items: center;    /* alinea a la izquierda (usa center si los quieres centrados) */
+  padding-left: 40px;         /* opcional, separa del borde izquierdo */
+  gap: 5px; 
+}
+
+.texto-color{
+  color: black;
+}
+
+.texto-color label {
   color: white;
 }
 
+.titulo-tabla {
+  padding-left: 55px;
+  color: white; /* o cualquier color que estés usando */
+}
 
-.contenedor-principal {
+.graficas-posicion {
   display: flex;
-  flex-direction: row; /* fila horizontal */
-  align-items: flex-start; /* alineamos al inicio verticalmente */
-  gap: 20px; /* espacio entre columnas */
-  padding: 20px;
-}
-
-.panel-controles {
-  /* Para que el panel tenga un ancho fijo o relativo */
-  width: 300px;
-}
-
-.panel-grafica {
-  /* Para que la gráfica tome el resto del espacio */
-  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-start; /* parte superior */
+  align-items: flex-end;       /* derecha dentro de su columna */
+  height: 100%;
 }

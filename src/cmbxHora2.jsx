@@ -39,8 +39,8 @@ const Horas2 = ({ activo, onCambio }) => {
   }, [activo]);
 
   return (
-    <div>
-      <label htmlFor="ComboBox1">Fin:</label>
+    <div className='texto-color'>
+      <label htmlFor="ComboBox1">Fin: </label>
       <select id="ComboBox1" value={horaSeleccionada} onChange={Cambio}>
         <option value="">-- Selecciona Fecha y Hora --</option>
         {fechasHoras.map((fechaHora, index) => (

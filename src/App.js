@@ -15,6 +15,7 @@ import BotonGraficarDisco from './btnGraficarDisco';
 import BotonSwitch from './btnApagar_Prender';
 import GraficoHistorial from './graficoHistorial';
 import BotonGraficarGPU from './btnGraficarGPU';
+import Ventana from './modal';
 
 
 function App() {
@@ -58,7 +59,8 @@ function App() {
 
   const graficarCPU = async () => {
     if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try {
+    try 
+    {
       const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
       const data = await res.json();
       const formateado = data.map(d => ({
@@ -67,14 +69,18 @@ function App() {
       }));
       setDatosGrafico(formateado);
       setGraficoRendimiento("CPU");
-    } catch (err) {
+    } 
+
+    catch (err) 
+    {
       console.error("Error al graficar CPU:", err);
     }
   };
 
   const graficarMemoria = async () => {
     if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try {
+    try 
+    {
       const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
       const data = await res.json();
       const formateado = data.map(d => ({
@@ -83,14 +89,18 @@ function App() {
       }));
       setDatosGrafico(formateado);
       setGraficoRendimiento("Memoria");
-    } catch (err) {
+    } 
+
+    catch (err) 
+    {
       console.error("Error al graficar Memoria:", err);
     }
   };
 
   const graficarDisco = async () => {
     if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try {
+    try 
+    {
       const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
       const data = await res.json();
       const formateado = data.map(d => ({
@@ -99,14 +109,18 @@ function App() {
       }));
       setDatosGrafico(formateado);
       setGraficoRendimiento("Disco");
-    } catch (err) {
+    } 
+
+    catch (err) 
+    {
       console.error("Error al graficar Memoria:", err);
     }
   };
 
     const graficarGPU = async () => {
     if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try {
+    try 
+    {
       const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
       const data = await res.json();
       const formateado = data.map(d => ({
@@ -115,7 +129,10 @@ function App() {
       }));
       setDatosGrafico(formateado);
       setGraficoRendimiento("GPU");
-    } catch (err) {
+    }
+
+    catch (err) 
+    {
       console.error("Error al graficar Memoria:", err);
     }
   };
@@ -124,27 +141,35 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h3>Administrador de Tareas:</h3>
+        <Ventana/>
+        <h3 className='titulo-tabla'>Administrador de Tareas:</h3>
         <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
-        <BotonCPU onClick={() => setGraficoVisible("CPU")} />
-        <BotonMemoria onClick={() => setGraficoVisible("Memoria")} />
-        <BotonDisco onClick={() => setGraficoVisible("Disco")} />
-        <BotonGPU onClick={() => setGraficoVisible("GPU")} />
+
+        <div className="botones-rendimiento">
+          <BotonCPU onClick={() => setGraficoVisible("CPU")} />
+          <BotonMemoria onClick={() => setGraficoVisible("Memoria")} />
+          <BotonDisco onClick={() => setGraficoVisible("Disco")} />
+          <BotonGPU onClick={() => setGraficoVisible("GPU")} />
+        </div>
+
         <Horas1 activo={switchEncendido} onCambio={setInicio} />
         <Horas2 activo={switchEncendido} onCambio={setFin} />
+
+        <div className="botones-historial">
         <BotonGraficarCPU onClick={graficarCPU} />
         <BotonGraficarMemoria onClick={graficarMemoria} />
         <BotonGraficarDisco onClick={graficarDisco} />
         <BotonGraficarGPU onClick={graficarGPU} />
         <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
+        </div>
        
+       <div className="graficas-posicion">
         {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
         {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
         {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
         {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
-        {graficoRendimiento && (<GraficoHistorial datos={datosGrafico} tipo={graficoRendimiento} />
-)}
-
+        {graficoRendimiento && (<GraficoHistorial datos={datosGrafico} tipo={graficoRendimiento} />)}
+        </div>
       </header>
     </div>
   );

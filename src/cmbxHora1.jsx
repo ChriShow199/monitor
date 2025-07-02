@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import './App.css';
 const Horas1 = ({ activo, onCambio }) => {
   const [horaSeleccionada, setHoraSeleccionada] = useState('');
   const [fechasHoras, setFechasHoras] = useState([]);
@@ -39,8 +39,8 @@ const Horas1 = ({ activo, onCambio }) => {
   }, [activo]);
 
   return (
-    <div>
-      <label htmlFor="ComboBox1">Inicio:</label>
+    <div className='texto-color'>
+      <label htmlFor="ComboBox1">Inicio: </label>
       <select id="ComboBox1" value={horaSeleccionada} onChange={Cambio}>
         <option value="">-- Selecciona Fecha y Hora --</option>
         {fechasHoras.map((fechaHora, index) => (

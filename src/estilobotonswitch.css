@@ -46,3 +46,14 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
+
+.switch-contenedor {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* espacio entre texto y switch */
+}
+
+.switch-label {
+  color: white; /* o el color que quieras */
+  font-size: 20px;
+}
