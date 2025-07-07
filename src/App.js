@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Table from './Tabla';
 import BotonCPU from './btnCPU';
 import BotonMemoria from './btnMemoria';
 import BotonDisco from './btnDisco';
 import BotonGPU from './btnGPU';
+import BotonPDF from './btnPDF';
 import Grafico from './grafico';
 import Horas1 from './cmbxHora1';
 import Horas2 from './cmbxHora2';
@@ -24,8 +25,10 @@ function App() {
   const [switchEncendido, setSwitchEncendido] = useState(false); // Inicia encendido
   const [inicio, setInicio] = useState('');
   const [fin, setFin] = useState('');
-  const [graficoRendimiento, setGraficoRendimiento] = useState(null); // 'CPU' o 'Memoria'
+  const [graficoRendimiento, setGraficoRendimiento] = useState(null);
   const [datosGrafico, setDatosGrafico] = useState([]);
+  const [usuario, setUsuario] = useState(null);
+  const graficoRef = useRef(null);
 
 
   useEffect(() => {
@@ -141,9 +144,25 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Ventana/>
+        <Ventana onLoginSuccess={setUsuario} />
+        {usuario && (
+          <div>
+            <h3 className='titulo-tabla'>Usuario: <strong>{usuario.correo}</strong></h3>
+            <h3 className='titulo-tabla'>Rol: <strong>{usuario.rol}</strong></h3>
+          </div>
+        )}
         <h3 className='titulo-tabla'>Administrador de Tareas:</h3>
-        <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
+        
+        <div className="contenedor-superior">
+          <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
+          <div className="graficas-posicion">
+            {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
+            {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
+            {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
+            {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
+            {graficoRendimiento && (<GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />)}
+          </div>
+        </div>
 
         <div className="botones-rendimiento">
           <BotonCPU onClick={() => setGraficoVisible("CPU")} />
@@ -152,8 +171,10 @@ function App() {
           <BotonGPU onClick={() => setGraficoVisible("GPU")} />
         </div>
 
-        <Horas1 activo={switchEncendido} onCambio={setInicio} />
-        <Horas2 activo={switchEncendido} onCambio={setFin} />
+        <div className='superposicion-cmbx'>
+          <Horas1 activo={switchEncendido} onCambio={setInicio} />
+          <Horas2 activo={switchEncendido} onCambio={setFin} />
+        </div>
 
         <div className="botones-historial">
         <BotonGraficarCPU onClick={graficarCPU} />
@@ -161,14 +182,7 @@ function App() {
         <BotonGraficarDisco onClick={graficarDisco} />
         <BotonGraficarGPU onClick={graficarGPU} />
         <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
-        </div>
-       
-       <div className="graficas-posicion">
-        {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
-        {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
-        {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
-        {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
-        {graficoRendimiento && (<GraficoHistorial datos={datosGrafico} tipo={graficoRendimiento} />)}
+        <BotonPDF usuario={usuario} graficoRef={graficoRef} tipo={graficoRendimiento} inicio={inicio} fin={fin} />
         </div>
       </header>
     </div>

@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;      /* apila los hijos verticalmente */
   align-items: flex-start;     /* los alinea a la izquierda */
-  justify-content: center;     /* centra todo verticalmente */
+  justify-content: flex-start;     /* centra todo verticalmente */
   font-size: calc(10px + 2vmin);
   color: white;
   padding-left: 20px;          /* opcional: espacio desde el borde izquierdo */
@@ -27,7 +27,7 @@
 }
 
 .botones-historial {
-  height: 38vh; 
+  height: 45vh; 
   display: flex;
   flex-direction: column;     /* botones en columna */
   justify-content: center;    /* centra verticalmente */
@@ -49,10 +49,18 @@
   color: white; /* o cualquier color que estés usando */
 }
 
-.graficas-posicion {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* parte superior */
-  align-items: flex-end;       /* derecha dentro de su columna */
-  height: 100%;
+.contenedor-superior {
+  position: relative;
+  width: 100%;
 }
+
+.graficas-posicion {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.superposicion-cmbx{
+  position: relative;
+}
+

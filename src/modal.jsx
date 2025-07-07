@@ -3,11 +3,12 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
-function Ventana() {
+function Ventana({ onLoginSuccess }) {
   const [modalLoginOpen, setModalLoginOpen] = useState(false);
   const [modalRegistroOpen, setModalRegistroOpen] = useState(false);
   const [rolRegistro, setRolRegistro] = useState('');
-
+  const [listaRoles, setListaRoles] = useState([]);
+ 
   //Login
   const [correoLogin, setCorreoLogin] = useState('');
   const [passLogin, setPassLogin] = useState('');
@@ -39,6 +40,7 @@ function Ventana() {
       if (data.status === 'ok') 
       {
         alert("Inicio de sesión exitoso");
+        onLoginSuccess({ correo: data.correo, rol: data.rol });
         setModalLoginOpen(false);
       } 
 
@@ -55,54 +57,71 @@ function Ventana() {
     }
   };
 
-  const Registro = async () => {
-    if (!correoRegistro || !passRegistro || !confirmPass) 
-    {
-      alert("Rellena todos los campos");
-      return;
-    }
+const Registro = async () => {
+  if (!correoRegistro || !passRegistro || !confirmPass || !rolRegistro) 
+  {
+    alert("Rellena todos los campos");
+    return;
+  }
 
-    if (passRegistro !== confirmPass) 
-    {
-      alert("Las contraseñas no coinciden");
-      return;
-    }
+  if (passRegistro !== confirmPass) 
+  {
+    alert("Las contraseñas no coinciden");
+    return;
+  }
 
-    try 
-    {
-      const res = await fetch(`http://localhost:8080/rendimientos/usuarios.php?accion=registro`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          correo: correoRegistro,
-          contrasena: passRegistro
-        })
-      });
+  try 
+  {
+    const res = await fetch(`http://localhost:8080/rendimientos/usuarios.php?accion=registro`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        correo: correoRegistro,
+        contrasena: passRegistro,
+        rol: rolRegistro
+      })
+    });
 
-      const data = await res.json();
-      if (data.status === 'ok') 
-      {
-        alert("Registro exitoso");
-        setModalRegistroOpen(false);
-        setCorreoRegistro('');
-        setPassRegistro('');
-        setConfirmPass('');
-      } 
-      
-      else 
-      {
-        alert(data.message || "Error al registrar");
-      }
+    const data = await res.json();
+    if (data.status === 'ok') 
+    {
+      alert("Registro exitoso");
+      onLoginSuccess({ correo: data.correo, rol: data.rol });
+      setModalRegistroOpen(false);
+      setCorreoRegistro('');
+      setPassRegistro('');
+      setConfirmPass('');
+      setRolRegistro('');
     } 
-    
-    catch (err) 
+
+    else 
     {
-      console.error("Error de red:", err);
-      alert("No se pudo conectar al servidor");
+      alert(data.message || "Error al registrar");
     }
-  };
+  } 
+
+  catch (err) 
+  {
+    console.error("Error de red:", err);
+    alert("No se pudo conectar al servidor");
+  }
+};
+
 
   useEffect(() => {setModalLoginOpen(true);}, []);
+
+  useEffect(() => {
+    if (modalRegistroOpen) 
+    {
+      fetch('http://localhost:8080/rendimientos/usuarios.php?accion=roles')
+        .then(res => res.json())
+        .then(data => setListaRoles(data))
+        .catch(err => {
+          console.error("Error al cargar roles:", err);
+          alert("No se pudieron cargar los roles");
+        });
+    }
+  }, [modalRegistroOpen]);
 
   return (
     <div>
@@ -110,7 +129,7 @@ function Ventana() {
       <Modal
         isOpen={modalLoginOpen}
         onRequestClose={() => setModalLoginOpen(false)}
-        shouldCloseOnOverlayClick={true}
+        shouldCloseOnOverlayClick={false}
         style={{
           content: {
             top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
@@ -193,9 +212,7 @@ function Ventana() {
           style={{ width: '100%', marginBottom: '15px', padding: '8px' }}
         >
           <option value="">Selecciona un rol</option>
-          <option value="admin">Administrador</option>
-          <option value="usuario">Usuario</option>
-          <option value="invitado">Invitado</option>
+          {listaRoles.map((rol) => (<option key={rol.IDRol} value={rol.nombreRol}> {rol.nombreRol}</option>))}
         </select>
 
         <button onClick={Registro} style={{ marginRight: '10px' }}>Registrarse</button>
