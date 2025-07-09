@@ -32,7 +32,7 @@
   flex-direction: column;     /* botones en columna */
   justify-content: center;    /* centra verticalmente */
   align-items: center;    /* alinea a la izquierda (usa center si los quieres centrados) */
-  padding-left: 40px;         /* opcional, separa del borde izquierdo */
+  padding-left: 90px;         /* opcional, separa del borde izquierdo */
   gap: 5px; 
 }
 
@@ -62,5 +62,23 @@
 
 .superposicion-cmbx{
   position: relative;
+  display: flex;
+  gap: 10px; 
+  padding-left: 525px;
+  padding-top: 10px;
 }
 
+.boton-exportar {
+  height: 10vh; 
+  display: flex;
+  align-items: end;    /* alinea a la izquierda (usa center si los quieres centrados) */
+  padding-right: 50px;
+}
+
+.usuario-rol {
+  height: 5vh; 
+  display: flex;
+  align-items: end;    /* alinea a la izquierda (usa center si los quieres centrados) */
+  padding-left: 625px;
+  gap: 5px;
+}

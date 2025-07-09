@@ -17,7 +17,7 @@ const GraficoHistorial = forwardRef(({ datos, tipo }, ref) => {
 
   return (
     <div ref={ref}>
-      <LineChart width={1500} height={333} data={datos} margin={{ top: 1, right: 1, left: 500, bottom: 1 }}>
+      <LineChart width={1500} height={590} data={datos} margin={{ top: 15, right: 1, left: 450, bottom: 1 }}>
         <CartesianGrid strokeDasharray="0" />
         <XAxis dataKey="name" />
         <YAxis domain={[0, 100]} />

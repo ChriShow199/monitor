@@ -129,7 +129,7 @@ const Registro = async () => {
       <Modal
         isOpen={modalLoginOpen}
         onRequestClose={() => setModalLoginOpen(false)}
-        shouldCloseOnOverlayClick={false}
+        shouldCloseOnOverlayClick={true}
         style={{
           content: {
             top: '50%', left: '50%', transform: 'translate(-50%, -50%)',

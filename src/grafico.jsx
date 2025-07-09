@@ -31,9 +31,9 @@ export default function Grafico({ cpu, disco, memoria, gpu }) {
   return (
     <LineChart
       width={1500}
-      height={333}
+      height={590}
       data={data}
-      margin={{ top: 1, right: 1, left: 500, bottom: 1 }}
+      margin={{ top: 15, right: 1, left: 450, bottom: 1 }}
     >
       <CartesianGrid strokeDasharray="0" />
       <XAxis dataKey="name" />

@@ -21,7 +21,7 @@ import Ventana from './modal';
 
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null, });
-  const [graficoVisible, setGraficoVisible] = useState(null);
+  const [graficoVisible, setGraficoVisible] = useState("CPU");
   const [switchEncendido, setSwitchEncendido] = useState(false); // Inicia encendido
   const [inicio, setInicio] = useState('');
   const [fin, setFin] = useState('');
@@ -60,129 +60,91 @@ function App() {
   const toggleSwitch = () => setSwitchEncendido(!switchEncendido);
 
 
-  const graficarCPU = async () => {
-    if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try 
-    {
-      const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
-      const data = await res.json();
-      const formateado = data.map(d => ({
-        name: d.fecha_hora,
-        Rendimiento: d.uso_cpu
-      }));
-      setDatosGrafico(formateado);
-      setGraficoRendimiento("CPU");
-    } 
+  const mostrarGraficoTiempoReal = (tipo) => {
+      setGraficoVisible(tipo);
+      setGraficoRendimiento(null); // Ocultar gráfico histórico
+    };
 
-    catch (err) 
-    {
-      console.error("Error al graficar CPU:", err);
-    }
-  };
-
-  const graficarMemoria = async () => {
-    if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try 
-    {
-      const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
-      const data = await res.json();
-      const formateado = data.map(d => ({
-        name: d.fecha_hora,
-        Rendimiento: d.uso_memoria
-      }));
-      setDatosGrafico(formateado);
-      setGraficoRendimiento("Memoria");
-    } 
-
-    catch (err) 
-    {
-      console.error("Error al graficar Memoria:", err);
-    }
-  };
-
-  const graficarDisco = async () => {
-    if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try 
-    {
-      const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
-      const data = await res.json();
-      const formateado = data.map(d => ({
-        name: d.fecha_hora,
-        Rendimiento: d.uso_disco
-      }));
-      setDatosGrafico(formateado);
-      setGraficoRendimiento("Disco");
-    } 
-
-    catch (err) 
-    {
-      console.error("Error al graficar Memoria:", err);
-    }
-  };
-
-    const graficarGPU = async () => {
-    if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
-    try 
-    {
-      const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
-      const data = await res.json();
-      const formateado = data.map(d => ({
-        name: d.fecha_hora,
-        Rendimiento: d.uso_gpu
-      }));
-      setDatosGrafico(formateado);
-      setGraficoRendimiento("GPU");
-    }
-
-    catch (err) 
-    {
-      console.error("Error al graficar Memoria:", err);
-    }
-  };
+  const graficarHistorial = async (tipo) => {
+  if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
+  try 
+  {
+    const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
+    const data = await res.json();
+    const formateado = data.map(d => ({
+      name: d.fecha_hora,
+      Rendimiento:
+        tipo === "CPU" ? d.uso_cpu :
+        tipo === "Memoria" ? d.uso_memoria :
+        tipo === "Disco" ? d.uso_disco :
+        tipo === "GPU" ? d.uso_gpu : 0
+    }));
+    setDatosGrafico(formateado);
+    setGraficoRendimiento(tipo);
+    setGraficoVisible(null); // Ocultar gráfico tiempo real
+  } 
+  
+  catch (err) 
+  {
+    console.error(`Error al graficar ${tipo}:`, err);
+  }
+};
 
 
   return (
     <div className="App">
       <header className="App-header">
         <Ventana onLoginSuccess={setUsuario} />
-        {usuario && (
-          <div>
-            <h3 className='titulo-tabla'>Usuario: <strong>{usuario.correo}</strong></h3>
-            <h3 className='titulo-tabla'>Rol: <strong>{usuario.rol}</strong></h3>
-          </div>
-        )}
+
         <h3 className='titulo-tabla'>Administrador de Tareas:</h3>
         
         <div className="contenedor-superior">
           <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
           <div className="graficas-posicion">
-            {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
-            {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
-            {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
-            {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
-            {graficoRendimiento && (<GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />)}
+
+            <div className='usuario-rol'>
+              {usuario && (
+                <div className='boton-exportar'>
+                  <h3 className='titulo-tabla'>Usuario: <strong>{usuario.correo}</strong></h3>
+                  <h3 className='titulo-tabla'>Rol: <strong>{usuario.rol}</strong></h3>
+                </div>
+              )}
+              <BotonPDF usuario={usuario} graficoRef={graficoRef} tipo={graficoRendimiento} inicio={inicio} fin={fin} />
+            </div>
+            
+              {graficoVisible && (
+                <>
+                  {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
+                  {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
+                  {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
+                  {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
+                </>
+              )}
+
+              {graficoRendimiento && (
+                <GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />
+              )}
+
+            <div className='superposicion-cmbx'>
+              <Horas1 activo={switchEncendido} onCambio={setInicio} />
+              <Horas2 activo={switchEncendido} onCambio={setFin} />
+              <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
+            </div>
           </div>
         </div>
 
         <div className="botones-rendimiento">
-          <BotonCPU onClick={() => setGraficoVisible("CPU")} />
-          <BotonMemoria onClick={() => setGraficoVisible("Memoria")} />
-          <BotonDisco onClick={() => setGraficoVisible("Disco")} />
-          <BotonGPU onClick={() => setGraficoVisible("GPU")} />
-        </div>
-
-        <div className='superposicion-cmbx'>
-          <Horas1 activo={switchEncendido} onCambio={setInicio} />
-          <Horas2 activo={switchEncendido} onCambio={setFin} />
+          <BotonCPU onClick={() => mostrarGraficoTiempoReal("CPU")} />
+          <BotonMemoria onClick={() => mostrarGraficoTiempoReal("Memoria")} />
+          <BotonDisco onClick={() => mostrarGraficoTiempoReal("Disco")} />
+          <BotonGPU onClick={() => mostrarGraficoTiempoReal("GPU")} />
         </div>
 
         <div className="botones-historial">
-        <BotonGraficarCPU onClick={graficarCPU} />
-        <BotonGraficarMemoria onClick={graficarMemoria} />
-        <BotonGraficarDisco onClick={graficarDisco} />
-        <BotonGraficarGPU onClick={graficarGPU} />
-        <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
-        <BotonPDF usuario={usuario} graficoRef={graficoRef} tipo={graficoRendimiento} inicio={inicio} fin={fin} />
+          <BotonGraficarCPU onClick={() => graficarHistorial("CPU")} />
+          <BotonGraficarMemoria onClick={() => graficarHistorial("Memoria")} />
+          <BotonGraficarDisco onClick={() => graficarHistorial("Disco")} />
+          <BotonGraficarGPU onClick={() => graficarHistorial("GPU")} />
         </div>
       </header>
     </div>

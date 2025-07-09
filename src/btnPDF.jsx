@@ -27,7 +27,7 @@ export default function BotonPDF({ usuario, graficoRef, tipo, inicio, fin }) {
     {
       const canvas = await html2canvas(graficoRef.current);
       const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', -97, 95, 300, 80); // Posición y tamaño
+      doc.addImage(imgData, 'PNG', -92, 95, 300, 125); // Posición y tamaño
     }
 
     doc.save('reporte.pdf');
