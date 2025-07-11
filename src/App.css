@@ -69,16 +69,25 @@
 }
 
 .boton-exportar {
-  height: 10vh; 
   display: flex;
   align-items: end;    /* alinea a la izquierda (usa center si los quieres centrados) */
-  padding-right: 50px;
+  padding-left: 510px;
 }
 
 .usuario-rol {
   height: 5vh; 
   display: flex;
-  align-items: end;    /* alinea a la izquierda (usa center si los quieres centrados) */
-  padding-left: 625px;
-  gap: 5px;
+  align-items: center;    /* alinea a la izquierda (usa center si los quieres centrados) */
+  padding-left: 420px;
+  padding-top: 350px;
+  position: relative;
+}
+
+.ocultar-grafico{
+  position: absolute;
+  left: -999999px;
+  top: 0;
+  width: 1500px;  /* ancho del gráfico */
+  height: 590px;  /* alto del gráfico */
+  overflow: hidden;
 }

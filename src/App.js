@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
 import Table from './Tabla';
@@ -17,12 +18,13 @@ import BotonSwitch from './btnApagar_Prender';
 import GraficoHistorial from './graficoHistorial';
 import BotonGraficarGPU from './btnGraficarGPU';
 import Ventana from './modal';
+import BotonUsuario from './btnUsuario';
 
 
 function App() {
   const [dato, setDato] = useState({ uso_cpu: null, uso_memoria: null, uso_disco: null, uso_gpu: null, });
   const [graficoVisible, setGraficoVisible] = useState("CPU");
-  const [switchEncendido, setSwitchEncendido] = useState(false); // Inicia encendido
+  const [switchEncendido, setSwitchEncendido] = useState(true); // Inicia encendido
   const [inicio, setInicio] = useState('');
   const [fin, setFin] = useState('');
   const [graficoRendimiento, setGraficoRendimiento] = useState(null);
@@ -30,8 +32,48 @@ function App() {
   const [usuario, setUsuario] = useState(null);
   const graficoRef = useRef(null);
 
+    // Cargar usuario de sessionStorage al montar
+  useEffect(() => {
+    const usuarioGuardado = sessionStorage.getItem('usuario');
+    if (usuarioGuardado) 
+    {
+      setUsuario(JSON.parse(usuarioGuardado));
+    }
+  }, []);
+
+  // Guardar usuario en sessionStorage al cambiar
+  useEffect(() => {
+    if (usuario) 
+    {
+      sessionStorage.setItem('usuario', JSON.stringify(usuario));
+    } 
+    else
+    {
+      sessionStorage.removeItem('usuario');
+    }
+  }, [usuario]);
+
+  // Limpiar sesión al refrescar o cerrar pestaña
+  useEffect(() => {
+    const limpiarSesion = () => {
+      sessionStorage.removeItem('usuario');
+      setUsuario(null);
+    };
+    window.addEventListener('beforeunload', limpiarSesion);
+    return () => {
+      window.removeEventListener('beforeunload', limpiarSesion);
+    };
+  }, []);
+
+
+
 
   useEffect(() => {
+    const usuarioGuardado = sessionStorage.getItem('usuario');
+    if (usuarioGuardado) 
+    {
+      setUsuario(JSON.parse(usuarioGuardado));
+    }
     let isFetching = false;
     const fetchData = async () => {
       if (isFetching) return; // evita llamada si ya hay una en curso
@@ -92,62 +134,90 @@ function App() {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Ventana onLoginSuccess={setUsuario} />
+    <Router>
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <>
+              <div className="App">
+                <header className="App-header">
+                  <Ventana onLoginSuccess={setUsuario} usuario={usuario} />
+                  <h3 className='titulo-tabla'>Administrador de Tareas:</h3>
+                  
+                  <div className="contenedor-superior">
+                    <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
+                    <div className="graficas-posicion">
+                      <div className='boton-exportar'>
+                        <BotonUsuario />
+                      </div>
+                        {graficoVisible && (
+                          <>
+                            {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
+                            {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
+                            {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
+                            {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
+                          </>
+                        )}
 
-        <h3 className='titulo-tabla'>Administrador de Tareas:</h3>
+                        {graficoRendimiento && (
+                          <GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />
+                        )}
+
+                      <div className='superposicion-cmbx'>
+                        <Horas1 activo={switchEncendido} onCambio={setInicio} />
+                        <Horas2 activo={switchEncendido} onCambio={setFin} />
+                        <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="botones-rendimiento">
+                    <BotonCPU onClick={() => mostrarGraficoTiempoReal("CPU")} />
+                    <BotonMemoria onClick={() => mostrarGraficoTiempoReal("Memoria")} />
+                    <BotonDisco onClick={() => mostrarGraficoTiempoReal("Disco")} />
+                    <BotonGPU onClick={() => mostrarGraficoTiempoReal("GPU")} />
+                  </div>
+
+                  <div className="botones-historial">
+                    <BotonGraficarCPU onClick={() => graficarHistorial("CPU")} />
+                    <BotonGraficarMemoria onClick={() => graficarHistorial("Memoria")} />
+                    <BotonGraficarDisco onClick={() => graficarHistorial("Disco")} />
+                    <BotonGraficarGPU onClick={() => graficarHistorial("GPU")} />
+                  </div>
+                </header>
+              </div>
+            </>
+          } 
+        />
         
-        <div className="contenedor-superior">
-          <Table cpu={dato.uso_cpu} memoria={dato.uso_memoria} disco={dato.uso_disco} gpu={dato.uso_gpu}/>
-          <div className="graficas-posicion">
+          
+        <Route
+          path="/rutadered"
+          element={
+            <>
+              <div className="App">
+                <header className="App-header">
+                    {usuario && (
+                      <div className='usuario-rol'>
+                        <BotonPDF usuario={usuario} graficoRef={graficoRef} tipo={graficoRendimiento} inicio={inicio} fin={fin}/>
+                        <h3 className='titulo-tabla'>Usuario: <strong>{usuario.correo}</strong></h3>
+                        <h3 className='titulo-tabla'>Rol: <strong>{usuario.rol}</strong></h3>
+                      </div>
+                    )}
 
-            <div className='usuario-rol'>
-              {usuario && (
-                <div className='boton-exportar'>
-                  <h3 className='titulo-tabla'>Usuario: <strong>{usuario.correo}</strong></h3>
-                  <h3 className='titulo-tabla'>Rol: <strong>{usuario.rol}</strong></h3>
-                </div>
-              )}
-              <BotonPDF usuario={usuario} graficoRef={graficoRef} tipo={graficoRendimiento} inicio={inicio} fin={fin} />
-            </div>
-            
-              {graficoVisible && (
-                <>
-                  {graficoVisible === "CPU" && <Grafico cpu={dato.uso_cpu} />}
-                  {graficoVisible === "Memoria" && <Grafico memoria={dato.uso_memoria} />}
-                  {graficoVisible === "Disco" && <Grafico disco={dato.uso_disco} />}
-                  {graficoVisible === "GPU" && <Grafico gpu={dato.uso_gpu} />}
-                </>
-              )}
-
-              {graficoRendimiento && (
-                <GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />
-              )}
-
-            <div className='superposicion-cmbx'>
-              <Horas1 activo={switchEncendido} onCambio={setInicio} />
-              <Horas2 activo={switchEncendido} onCambio={setFin} />
-              <BotonSwitch isChecked={switchEncendido} onToggle={toggleSwitch} />
-            </div>
-          </div>
-        </div>
-
-        <div className="botones-rendimiento">
-          <BotonCPU onClick={() => mostrarGraficoTiempoReal("CPU")} />
-          <BotonMemoria onClick={() => mostrarGraficoTiempoReal("Memoria")} />
-          <BotonDisco onClick={() => mostrarGraficoTiempoReal("Disco")} />
-          <BotonGPU onClick={() => mostrarGraficoTiempoReal("GPU")} />
-        </div>
-
-        <div className="botones-historial">
-          <BotonGraficarCPU onClick={() => graficarHistorial("CPU")} />
-          <BotonGraficarMemoria onClick={() => graficarHistorial("Memoria")} />
-          <BotonGraficarDisco onClick={() => graficarHistorial("Disco")} />
-          <BotonGraficarGPU onClick={() => graficarHistorial("GPU")} />
-        </div>
-      </header>
-    </div>
+                    <div className='ocultar-grafico'>
+                      {graficoRendimiento && (
+                        <GraficoHistorial ref={graficoRef} datos={datosGrafico} tipo={graficoRendimiento} />
+                      )}
+                    </div>
+                </header>
+              </div>
+            </>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 

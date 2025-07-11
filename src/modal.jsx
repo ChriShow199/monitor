@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
-function Ventana({ onLoginSuccess }) {
+function Ventana({ onLoginSuccess, usuario }) {
   const [modalLoginOpen, setModalLoginOpen] = useState(false);
   const [modalRegistroOpen, setModalRegistroOpen] = useState(false);
   const [rolRegistro, setRolRegistro] = useState('');
@@ -17,6 +17,8 @@ function Ventana({ onLoginSuccess }) {
   const [correoRegistro, setCorreoRegistro] = useState('');
   const [passRegistro, setPassRegistro] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
+
+
 
   const Login = async () => {
     if (!correoLogin || !passLogin) 
@@ -108,7 +110,16 @@ const Registro = async () => {
 };
 
 
-  useEffect(() => {setModalLoginOpen(true);}, []);
+    useEffect(() => {
+    if (!usuario) 
+    {
+      setModalLoginOpen(true);
+    } 
+    else 
+    {
+      setModalLoginOpen(false);
+    }
+  }, [usuario]);
 
   useEffect(() => {
     if (modalRegistroOpen) 
