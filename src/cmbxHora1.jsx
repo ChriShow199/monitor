@@ -15,7 +15,7 @@ const Horas1 = ({ activo, onCambio }) => {
 
     // Función para consultar las fechas en la base de datos
     const fetchFechas = () => {
-      fetch('http://localhost:8080/rendimientos/importar_datos.php')
+      fetch('http://localhost:8085/rendimientos/importar_datos.php')
         .then(res => res.json())
         .then(data => {
           // Evitar duplicados

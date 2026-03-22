@@ -29,7 +29,7 @@ function Ventana({ onLoginSuccess, usuario }) {
 
     try 
     {
-      const res = await fetch(`http://localhost:8080/rendimientos/usuarios.php?accion=login`, {
+      const res = await fetch(`http://localhost:8085/rendimientos/usuarios.php?accion=login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +74,7 @@ const Registro = async () => {
 
   try 
   {
-    const res = await fetch(`http://localhost:8080/rendimientos/usuarios.php?accion=registro`, {
+    const res = await fetch(`http://localhost:8085/rendimientos/usuarios.php?accion=registro`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -124,7 +124,7 @@ const Registro = async () => {
   useEffect(() => {
     if (modalRegistroOpen) 
     {
-      fetch('http://localhost:8080/rendimientos/usuarios.php?accion=roles')
+      fetch('http://localhost:8085/rendimientos/usuarios.php?accion=roles')
         .then(res => res.json())
         .then(data => setListaRoles(data))
         .catch(err => {

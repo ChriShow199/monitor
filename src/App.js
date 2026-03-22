@@ -80,7 +80,7 @@ function App() {
       isFetching = true;
       try 
       {
-        const url = switchEncendido ? "http://localhost:8080/rendimientos/envio_datos.php?insertar=1" : "http://localhost:8080/rendimientos/envio_datos.php";
+        const url = switchEncendido ? "http://localhost:8085/rendimientos/envio_datos.php?insertar=1" : "http://localhost:8085/rendimientos/envio_datos.php";
         const res = await fetch(url);
         const datos = await res.json();
         setDato({uso_cpu: datos.uso_cpu, uso_memoria: datos.uso_memoria, uso_disco: datos.uso_disco, uso_gpu: datos.uso_gpu,});
@@ -111,7 +111,7 @@ function App() {
   if (!inicio || !fin) return alert("Selecciona un rango de fechas válido");
   try 
   {
-    const res = await fetch(`http://localhost:8080/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
+    const res = await fetch(`http://localhost:8085/rendimientos/rango.php?inicio=${encodeURIComponent(inicio)}&fin=${encodeURIComponent(fin)}`);
     const data = await res.json();
     const formateado = data.map(d => ({
       name: d.fecha_hora,
