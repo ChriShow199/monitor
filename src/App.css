@@ -23,7 +23,8 @@
   justify-content: center;    /* centra verticalmente */
   align-items: center;    /* alinea a la izquierda (usa center si los quieres centrados) */
   padding-left: 130px;         /* opcional, separa del borde izquierdo */
-  gap: 5px; 
+  gap: 5px;
+  
 }
 
 .botones-historial {
